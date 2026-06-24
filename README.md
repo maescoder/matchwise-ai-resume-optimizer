@@ -71,6 +71,17 @@ python -m unittest discover -s tests -v
 
 The app is stateless and listens on `PORT`, so it can be deployed to AWS App Runner, Elastic Beanstalk, or ECS/Fargate. Add `GEMINI_API_KEY` in the service's environment-variable or secrets configuration; do not commit it to the repository.
 
+## Vercel deployment
+
+Vercel automatically detects `main.py` as the FastAPI entrypoint and serves `public/**` through its CDN.
+
+1. Import this GitHub repository into Vercel.
+2. Add `GEMINI_API_KEY` as an encrypted environment variable for Production, Preview, and Development.
+3. Optionally add `GEMINI_MODEL`; it defaults to `gemini-2.5-flash`.
+4. Deploy. New commits to `main` automatically create production deployments.
+
+Never paste the Gemini key into source files or `vercel.json`.
+
 ## LaTeX export
 
 Use **Download .tex** after generation. The app escapes LaTeX special characters (`#`, `$`, `%`, `&`, `~`, `_`, `^`, `\\`, `{`, `}`), uses only standard LaTeX packages, and does not define custom commands. Compile it with:
