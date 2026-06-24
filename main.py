@@ -14,7 +14,7 @@ from docx import Document
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from pypdf import PdfReader
@@ -80,6 +80,14 @@ async def handle_unexpected_error(_request: Request, error: Exception) -> JSONRe
 @app.get("/api/health")
 async def health() -> dict[str, bool]:
     return {"ok": True, "configured": bool(os.getenv("GEMINI_API_KEY"))}
+
+
+@app.get("/", include_in_schema=False)
+async def frontend_index() -> Response:
+    index_file = PUBLIC_DIR / "index.html"
+    if index_file.exists():
+        return FileResponse(index_file)
+    return RedirectResponse(url="/index.html")
 
 
 @app.post("/api/extract-resume")
@@ -278,8 +286,9 @@ def validate_application_pack(application_pack: dict[str, Any]) -> None:
         raise ApiError("Gemini returned incomplete application messages. Please try again.", 502)
 
 
-# Serve the frontend after all API routes so /api/* stays handled by FastAPI.
-app.mount("/", StaticFiles(directory=PUBLIC_DIR, html=True), name="public")
+# Vercel serves public/** from its CDN. Mount it only for local development.
+if not os.getenv("VERCEL"):
+    app.mount("/", StaticFiles(directory=PUBLIC_DIR, html=True), name="public")
 
 
 if __name__ == "__main__":
