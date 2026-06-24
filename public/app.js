@@ -159,8 +159,11 @@ latexButton.addEventListener("click", () => {
 });
 
 async function checkService() {
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 8000);
   try {
-    const response = await fetch("/api/health");
+    const response = await fetch("/api/health", { cache: "no-store", signal: controller.signal });
+    if (!response.ok) throw new Error("Health check failed");
     const data = await response.json();
     if (data.configured) {
       apiStatus.textContent = "Gemini connected";
@@ -172,6 +175,8 @@ async function checkService() {
   } catch {
     apiStatus.textContent = "Service unavailable";
     apiStatus.className = "api-status is-warning";
+  } finally {
+    window.clearTimeout(timeout);
   }
 }
 
@@ -562,9 +567,11 @@ function initInteractiveExperience() {
 
 function initScrollMotion(reduceMotion) {
   const revealItems = document.querySelectorAll(".reveal-on-scroll");
-  if (reduceMotion || !("IntersectionObserver" in window)) {
+  const hasAnchorTarget = Boolean(window.location.hash);
+  if (reduceMotion || !("IntersectionObserver" in window) || hasAnchorTarget) {
     revealItems.forEach((item) => item.classList.add("is-visible"));
   } else {
+    document.documentElement.classList.add("motion-ready");
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
