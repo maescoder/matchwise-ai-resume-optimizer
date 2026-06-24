@@ -1,5 +1,3 @@
-import * as THREE from "/vendor/three/three.module.min.js";
-
 const form = document.querySelector("#resumeForm");
 const resumeInput = document.querySelector("#currentResume");
 const jobInput = document.querySelector("#jobDescription");
@@ -562,7 +560,7 @@ function initInteractiveExperience() {
   initPointerGlow();
   initTiltCards();
   initMagneticControls();
-  initThreeBackground();
+  void initThreeBackground();
 }
 
 function initScrollMotion(reduceMotion) {
@@ -650,9 +648,17 @@ function initMagneticControls() {
   });
 }
 
-function initThreeBackground() {
+async function initThreeBackground() {
   const canvas = document.querySelector("#ambientCanvas");
-  if (!canvas || !THREE) return;
+  if (!canvas) return;
+
+  let THREE;
+  try {
+    THREE = await import("/vendor/three/three.module.min.js?v=20260624-3");
+  } catch {
+    canvas.hidden = true;
+    return;
+  }
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight, 0.1, 100);
