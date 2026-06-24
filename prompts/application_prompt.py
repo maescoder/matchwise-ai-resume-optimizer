@@ -1,25 +1,29 @@
-export const applicationPackSchema = {
-  type: "OBJECT",
-  properties: {
-    coverLetter: { type: "STRING" },
-    recruiterEmail: { type: "STRING" },
-    linkedInDM: { type: "STRING" },
-    referralRequest: { type: "STRING" }
-  },
-  required: ["coverLetter", "recruiterEmail", "linkedInDM", "referralRequest"]
-};
+from typing import Any
 
-export function buildApplicationPrompt({ jobDescription, currentResume }) {
-  return `
+
+APPLICATION_PACK_SCHEMA: dict[str, Any] = {
+    "type": "OBJECT",
+    "properties": {
+        "coverLetter": {"type": "STRING"},
+        "recruiterEmail": {"type": "STRING"},
+        "linkedInDM": {"type": "STRING"},
+        "referralRequest": {"type": "STRING"},
+    },
+    "required": ["coverLetter", "recruiterEmail", "linkedInDM", "referralRequest"],
+}
+
+
+def build_application_prompt(job_description: str, current_resume: str) -> str:
+    return f"""
 You are an expert career coach and professional job-application writer.
 
 Create an application outreach pack from these inputs:
 
 Job Description:
-${jobDescription}
+{job_description}
 
 Current Resume:
-${currentResume}
+{current_resume}
 
 Return JSON only, following the provided schema.
 
@@ -36,5 +40,4 @@ Output requirements:
 - recruiterEmail: subject line plus a short email body under 140 words.
 - linkedInDM: under 600 characters, conversational and polite.
 - referralRequest: under 900 characters, warm and respectful, asking for a referral without pressure.
-`.trim();
-}
+""".strip()

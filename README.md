@@ -1,6 +1,6 @@
 # Matchwise — AI-Powered ATS Resume Optimizer and Career Copilot
 
-A focused internship project that scores and rewrites a resume against a job description using a Python NLP scoring engine plus Google Gemini. It accepts pasted resume text or PDF, DOCX, and TXT uploads, then returns ATS analytics, a factual ATS-oriented resume, application outreach drafts, and downloadable Markdown/LaTeX versions.
+A focused internship project with a FastAPI backend that scores and rewrites a resume against a job description using a Python NLP scoring engine plus Google Gemini. It accepts pasted resume text or PDF, DOCX, and TXT uploads, then returns ATS analytics, a factual ATS-oriented resume, application outreach drafts, and downloadable Markdown/LaTeX versions.
 
 ## What it does
 
@@ -14,25 +14,40 @@ A focused internship project that scores and rewrites a resume against a job des
 - Enforces a one-line summary, up to three bullets for each role, all source projects, and a dedicated achievements/certifications section.
 - Creates escaped, dependency-free LaTeX that can be compiled by `pdflatex`.
 - Includes a responsive, light interface with locally served Three.js motion effects.
+- Runs ATS analysis directly inside the Python API without a Node-to-Python subprocess.
 
 ## Run locally
 
-1. Install Node.js 20 or later.
-2. Install Python 3.10 or later. If your Python executable is not named `python`, set `PYTHON_BIN` in `.env`.
+1. Install Python 3.10 or later.
+2. Create and activate a virtual environment:
+
+   ```powershell
+   python -m venv .venv
+   .\.venv\Scripts\Activate.ps1
+   ```
+
 3. Install packages:
 
-   ```bash
-   npm install
+   ```powershell
+   python -m pip install -r requirements.txt
    ```
 
 4. Copy `.env.example` to `.env` and set `GEMINI_API_KEY` to your Google Gemini API key.
-5. Start the app:
+5. Start the app with automatic reload:
 
-   ```bash
-   npm run dev
+   ```powershell
+   python -m uvicorn main:app --reload --port 3000
    ```
 
-6. Visit `http://localhost:3000`.
+6. Visit `http://localhost:3000`. Interactive API documentation is available at `http://localhost:3000/api/docs`.
+
+## Verify the backend
+
+Run the built-in API contract tests:
+
+```powershell
+python -m unittest discover -s tests -v
+```
 
 ## Configuration
 
@@ -41,7 +56,6 @@ A focused internship project that scores and rewrites a resume against a job des
 | `GEMINI_API_KEY` | Yes | Google Gemini API key, read only by the server. |
 | `GEMINI_MODEL` | No | Defaults to `gemini-2.5-flash`. |
 | `PORT` | No | Defaults to `3000`. |
-| `PYTHON_BIN` | No | Python executable used by the ATS scoring endpoint. Defaults to `python`. |
 
 ## AI/ML project features
 
