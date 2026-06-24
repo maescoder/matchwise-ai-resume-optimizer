@@ -1,0 +1,23 @@
+{
+  "name": "matchwise-ai-resume-optimizer",
+  "version": "1.0.0",
+  "description": "AI-powered ATS resume optimizer and career copilot using Gemini and Python.",
+  "type": "module",
+  "main": "server.mjs",
+  "scripts": {
+    "dev": "node --watch server.mjs",
+    "start": "node server.mjs",
+    "check": "node --check server.mjs && node --check prompts/resumePrompt.mjs && node --check prompts/applicationPrompt.mjs && node --check public/app.js && node scripts/check-python.mjs"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "mammoth": "^1.9.0",
+    "multer": "^2.2.0",
+    "pdf-parse": "^1.1.1",
+    "three": "^0.180.0"
+  }
+}

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Compare, score, and rewrite your resume for a specific job with AI." />
+    <title>Matchwise — AI Resume Copilot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <canvas id="ambientCanvas" class="ambient-canvas" aria-hidden="true"></canvas>
+    <div class="cursor-glow" aria-hidden="true"></div>
+    <div id="scrollProgress" class="scroll-progress" aria-hidden="true"></div>
+
+    <main class="page-shell">
+      <nav class="topbar" aria-label="Primary navigation">
+        <a class="brand" href="/" aria-label="Matchwise home">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>Match<span class="brand-accent">wise</span></span>
+        </a>
+        <div class="nav-links" aria-label="Page sections">
+          <a href="#workspace">Workspace</a>
+          <a href="#how-it-works">How it works</a>
+        </div>
+        <div id="apiStatus" class="api-status" role="status">Checking service...</div>
+      </nav>
+
+      <header class="hero reveal-on-scroll">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="pulse-dot"></span> AI CAREER COPILOT / GEMINI + PYTHON</p>
+          <h1>Your resume,<br /><span class="highlight-word">in the right orbit.</span></h1>
+          <p class="lede">See exactly how recruiting software reads your experience—then reshape it for the role without inventing a thing.</p>
+          <div class="hero-actions">
+            <a class="hero-cta magnetic" href="#workspace">Start matching <span aria-hidden="true">↘</span></a>
+            <p><strong>4 tools.</strong> One focused application.</p>
+          </div>
+          <div class="signal-row" aria-label="Product capabilities">
+            <span>ATS scoring</span><span>Live heatmap</span><span>Resume rewrite</span><span>Outreach kit</span>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-label="Animated resume match visualization">
+          <div class="orbit orbit-one"></div>
+          <div class="orbit orbit-two"></div>
+          <div class="match-card match-card-main tilt-card">
+            <div class="match-card-top"><span>LIVE MATCH</span><strong>87%</strong></div>
+            <div class="mini-resume">
+              <i class="line line-title"></i><i class="line line-wide"></i><i class="line line-mid"></i>
+              <div class="match-strip"><span></span><span></span><span></span><span></span></div>
+              <i class="line line-wide"></i><i class="line line-short"></i>
+            </div>
+            <div class="keyword-cloud"><span>Python</span><span>AWS</span><span>SQL</span><span>ML</span></div>
+          </div>
+          <div class="floating-chip chip-one"><span>+18</span> keywords found</div>
+          <div class="floating-chip chip-two"><span>✓</span> facts protected</div>
+          <div class="floating-chip chip-three">JD ↔ CV</div>
+        </div>
+      </header>
+
+      <section class="section-intro reveal-on-scroll" id="workspace">
+        <div><p class="eyebrow">THE WORKBENCH</p><h2>One input. Four useful outputs.</h2></div>
+        <p>Drop in your actual experience and the job you want. The interface does the comparison; you stay in control of the truth.</p>
+      </section>
+
+      <section class="workspace" aria-label="Resume optimization workspace">
+        <form id="resumeForm" class="input-card reveal-on-scroll tilt-card">
+          <div class="card-title-row">
+            <div>
+              <p class="step">01 / INPUT</p>
+              <h2>Source material</h2>
+            </div>
+            <p class="quiet">Your file is read in memory and is not stored.</p>
+          </div>
+
+          <label class="upload-zone" id="uploadZone" for="resumeFile">
+            <input id="resumeFile" name="resume" type="file" accept=".pdf,.docx,.txt,application/pdf,text/plain" />
+            <span class="upload-icon" aria-hidden="true">↗</span>
+            <span class="upload-copy"><strong>Drop your current resume</strong><small>PDF, DOCX, or TXT · up to 8 MB</small></span>
+            <span id="fileName" class="file-name">Choose file</span>
+          </label>
+
+          <div class="field-heading">
+            <label for="currentResume">Current resume</label>
+            <span id="resumeCount">0 characters</span>
+          </div>
+          <textarea id="currentResume" name="currentResume" rows="14" maxlength="45000" placeholder="Paste your current resume here, or upload a file above."></textarea>
+
+          <div class="field-heading">
+            <label for="jobDescription">Target job description</label>
+            <span id="jobCount">0 characters</span>
+          </div>
+          <textarea id="jobDescription" name="jobDescription" rows="14" maxlength="45000" placeholder="Paste the full job description here. Include responsibilities, required skills, and qualifications."></textarea>
+
+          <div class="action-stack">
+            <button id="scoreButton" class="score-button magnetic" type="button"><span>Calculate ATS score</span><span aria-hidden="true">%</span></button>
+            <button id="applicationButton" class="score-button magnetic" type="button"><span>Generate outreach pack</span><span aria-hidden="true">✉</span></button>
+            <button id="generateButton" class="generate-button magnetic" type="submit"><span>Generate ATS resume</span><span aria-hidden="true">↗</span></button>
+          </div>
+          <p id="formMessage" class="form-message" aria-live="polite"></p>
+        </form>
+
+        <section class="output-card reveal-on-scroll tilt-card" aria-label="Generated ATS resume">
+          <div class="card-title-row">
+            <div><p class="step">02 / OUTPUT</p><h2>Match intelligence</h2></div>
+            <div class="output-actions">
+              <button id="copyButton" class="secondary-button" type="button" disabled>Copy</button>
+              <button id="markdownButton" class="secondary-button" type="button" disabled>.md</button>
+              <button id="latexButton" class="secondary-button" type="button" disabled>.tex</button>
+            </div>
+          </div>
+          <section id="scorePanel" class="score-panel" hidden aria-label="ATS score analysis"></section>
+          <section id="applicationPanel" class="application-panel" hidden aria-label="Generated application messages"></section>
+          <div id="emptyState" class="empty-state">
+            <div class="empty-visual" aria-hidden="true"><span></span><span></span><span></span><b>AI</b></div>
+            <h3>Your analysis will land here.</h3>
+            <p>Score the match, expose keyword gaps, generate outreach, or build your tailored resume.</p>
+          </div>
+          <pre id="resumeOutput" class="resume-output" hidden aria-live="polite"></pre>
+        </section>
+      </section>
+
+      <section id="how-it-works" class="method-section reveal-on-scroll">
+        <div class="method-sticky">
+          <p class="eyebrow">BUILT FOR REAL APPLICATIONS</p>
+          <h2>AI that shows its work.</h2>
+          <p>Every output traces back to your resume and the target role. No imaginary promotions. No suspicious keyword soup.</p>
+          <div class="method-meter"><span id="methodMeter"></span></div>
+        </div>
+        <div class="method-steps">
+          <article><span>01</span><div><h3>Parse</h3><p>Extract your factual education, experience, projects, skills, and contact details.</p></div></article>
+          <article><span>02</span><div><h3>Compare</h3><p>Python NLP maps language, hard skills, soft skills, evidence, and ATS structure.</p></div></article>
+          <article><span>03</span><div><h3>Reconstruct</h3><p>Gemini rebuilds the resume around the role while keeping factual boundaries intact.</p></div></article>
+          <article><span>04</span><div><h3>Activate</h3><p>Export your resume and create a cover letter, recruiter email, DM, and referral note.</p></div></article>
+        </div>
+      </section>
+
+      <section class="trust-row reveal-on-scroll" aria-label="Product safeguards">
+        <div><span>01</span><p><strong>One API provider</strong> Gemini is called only from the server. Your API key never reaches the browser.</p></div>
+        <div><span>02</span><p><strong>Factual by design</strong> No invented metrics, skills, dates, certifications, or employers.</p></div>
+        <div><span>03</span><p><strong>Python ATS score</strong> Local NLP compares your resume with the target job.</p></div>
+        <div><span>04</span><p><strong>Resume heatmap</strong> Color-coded lines expose strong, partial, weak, and irrelevant areas.</p></div>
+        <div><span>05</span><p><strong>Outreach pack</strong> Cover letter, recruiter email, LinkedIn DM, and referral request.</p></div>
+        <div><span>06</span><p><strong>LaTeX export</strong> Download an escaped, standard-package file ready for pdflatex.</p></div>
+      </section>
+
+      <footer class="footer">
+        <a class="brand" href="/" aria-label="Matchwise home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Match<span class="brand-accent">wise</span></span></a>
+        <p>Designed for better applications, not fictional careers.</p>
+        <a href="#workspace">Back to workspace ↑</a>
+      </footer>
+    </main>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
