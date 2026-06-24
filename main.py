@@ -278,9 +278,8 @@ def validate_application_pack(application_pack: dict[str, Any]) -> None:
         raise ApiError("Gemini returned incomplete application messages. Please try again.", 502)
 
 
-# Vercel serves public/** from its CDN. Mount it only for local development.
-if not os.getenv("VERCEL"):
-    app.mount("/", StaticFiles(directory=PUBLIC_DIR, html=True), name="public")
+# Serve the frontend after all API routes so /api/* stays handled by FastAPI.
+app.mount("/", StaticFiles(directory=PUBLIC_DIR, html=True), name="public")
 
 
 if __name__ == "__main__":
