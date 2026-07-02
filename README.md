@@ -51,6 +51,7 @@ python -m unittest discover -s tests -v
 
 ## Configuration
 
+
 | Variable | Required | Purpose |
 | --- | --- | --- |
 | `GEMINI_API_KEY` | Yes | Google Gemini API key, read only by the server. |
