@@ -18,6 +18,7 @@ A project with a FastAPI backend that scores and rewrites a resume against a job
 
 ## Run locally
 
+
 1. Install Python 3.10 or later.
 2. Create and activate a virtual environment:
 
