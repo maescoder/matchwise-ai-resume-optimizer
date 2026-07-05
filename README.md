@@ -84,7 +84,6 @@ Never paste the Gemini key into source files or `vercel.json`.
 
 ## LaTeX export
 
-
 Use **Download .tex** after generation. The app escapes LaTeX special characters (`#`, `$`, `%`, `&`, `~`, `_`, `^`, `\\`, `{`, `}`), uses only standard LaTeX packages, and does not define custom commands. Compile it with:
 
 ```bash
