@@ -4,6 +4,7 @@ A project with a FastAPI backend that scores and rewrites a resume against a job
 
 ## What it does
 
+
 - Extracts text from PDF, DOCX, and TXT resumes without persisting the uploaded file.
 - Calculates an ATS match score with a local Python NLP engine.
 - Shows keyword coverage, hard-skill match, soft-skill match, section completeness, measurable-impact quality, missing keywords, and recommendations.
