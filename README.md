@@ -2,7 +2,6 @@
 
 A project with a FastAPI backend that scores and rewrites a resume against a job description using a Python NLP scoring engine plus Google Gemini. It accepts pasted resume text or PDF, DOCX, and TXT uploads, then returns ATS analytics, a factual ATS-oriented resume, application outreach drafts, and downloadable Markdown/LaTeX versions.
 
-
 ## What it does
 
 - Extracts text from PDF, DOCX, and TXT resumes without persisting the uploaded file.
